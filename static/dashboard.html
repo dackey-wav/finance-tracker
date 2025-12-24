@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Inter%3Awght%40400%3B500%3B600%3B700&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<title>FinTrack - Personal Finance Dashboard</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+      :root {
+        --primary-color: #13a4ec;
+        --background-light: #f8fafc;
+        --background-dark: #0f172a;
+        --card-light: #ffffff;
+        --card-dark: #1e293b;
+        --text-primary-light: #111827;
+        --text-primary-dark: #f8fafc;
+        --text-secondary-light: #6b7280;
+        --text-secondary-dark: #94a3b8;
+        --border-light: #e5e7eb;
+        --border-dark: #334155;
+      }
+      .dark {
+        --background: var(--background-dark);
+        --card: var(--card-dark);
+        --text-primary: var(--text-primary-dark);
+        --text-secondary: var(--text-secondary-dark);
+        --border: var(--border-dark);
+      }
+      body {
+        background-color: var(--background, var(--background-light));
+        color: var(--text-primary, var(--text-primary-light));
+        font-family: 'Inter', "Noto Sans", sans-serif;
+      }
+      .card {
+        background-color: var(--card, var(--card-light));
+        border: 1px solid var(--border, var(--border-light));
+        border-radius: 0.75rem;
+      }
+      .chart-bar {
+        background-color: #e5e7eb;
+      }
+      .dark .chart-bar {
+        background-color: #334155;
+      }
+      .chart-bar-fill {
+        background-color: var(--primary-color);
+      }
+    </style>
+</head>
+<body>
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-[var(--background)] group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-[var(--border)] px-6 md:px-10 py-4">
+<div class="flex items-center gap-3 text-[var(--text-primary)]">
+<div class="size-8 text-[var(--primary-color)]">
+<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-9h4v5h-4v-5zm0-3h4v2h-4v-2z"></path></svg>
+</div>
+<h2 class="text-[var(--text-primary)] text-xl font-bold">FinTrack</h2>
+</div>
+
+<nav class="flex items-center gap-4">
+<a class="text-[var(--primary-color)] bg-blue-50 dark:bg-blue-900 px-3 py-2 text-sm font-semibold leading-normal rounded-md" href="dashboard.html">Dashboard</a>
+<a class="text-[var(--text-secondary)] hover:text-[var(--text-primary)] px-3 py-2 text-sm font-medium leading-normal transition-colors" href="transactions_new.html">Транзакции</a>
+<a class="text-[var(--text-secondary)] hover:text-[var(--text-primary)] px-3 py-2 text-sm font-medium leading-normal transition-colors" href="reports.html">Отчеты</a>
+<a class="text-[var(--text-secondary)] hover:text-[var(--text-primary)] px-3 py-2 text-sm font-medium leading-normal transition-colors" href="settings.html">Настройки</a>
+</nav>
+<div class="flex flex-1 justify-end items-center gap-4">
+<button class="flex items-center justify-center rounded-full h-10 w-10 bg-gray-100 dark:bg-slate-800 text-[var(--text-primary)] hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined">light_mode</span>
+</button>
+</div>
+</header>
+<main class="px-4 md:px-10 lg:px-20 xl:px-40 flex flex-1 justify-center py-8">
+<div class="layout-content-container flex flex-col w-full max-w-6xl">
+<h1 class="text-[var(--text-primary)] text-4xl font-bold tracking-tight mb-8">Dashboard</h1>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="card p-6 flex flex-col gap-2">
+<p class="text-[var(--text-secondary)] text-sm font-medium">Balance</p>
+<p class="text-[var(--text-primary)] text-3xl font-bold" id="balance-value">$0</p>
+</div>
+<div class="card p-6 flex flex-col gap-2">
+<p class="text-[var(--text-secondary)] text-sm font-medium">Income (this month)</p>
+<p class="text-green-500 text-3xl font-bold" id="income-value">$0</p>
+</div>
+<div class="card p-6 flex flex-col gap-2">
+<p class="text-[var(--text-secondary)] text-sm font-medium">Spent (this month)</p>
+<p class="text-red-500 text-3xl font-bold" id="expense-value">$0</p>
+</div>
+<div class="card p-6 flex flex-col gap-2">
+<p class="text-[var(--text-secondary)] text-sm font-medium">Net cash flow (this month)</p>
+<p class="text-[var(--text-primary)] text-3xl font-bold" id="net-value">$0</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+<div class="card p-6 flex flex-col gap-4">
+  <h2 class="text-[var(--text-primary)] text-xl font-semibold">Доходы и расходы</h2>
+  <div class="flex items-baseline gap-2">
+    <p class="text-[var(--text-secondary)] text-sm">Последние 12 месяцев</p>
+  </div>
+  <div id="monthly-chart" class="grid min-h-[220px] grid-flow-col gap-4 items-end justify-items-center pt-4"></div>
+</div>
+
+
+<div class="card p-6 flex flex-col gap-4">
+  <h2 class="text-[var(--text-primary)] text-xl font-semibold">Расходы по категориям</h2>
+  <p class="text-[var(--text-secondary)] text-sm">Текущий месяц</p>
+  <div class="flex items-center gap-6 pt-4">
+    <div id="categories-chart" class="relative size-44">
+    </div>
+    <div id="categories-legend" class="flex flex-col gap-3 flex-1">
+    </div>
+  </div>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<h2 class="text-[var(--text-primary)] text-xl font-semibold">Последние транзакции</h2>
+<div class="flex items-center gap-2 flex-wrap">
+<button class="flex h-9 items-center justify-center gap-x-2 rounded-md bg-gray-100 dark:bg-slate-800 px-3 text-sm font-medium text-[var(--text-primary)] hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors">Дата <span class="material-symbols-outlined text-base">expand_more</span></button>
+<button class="flex h-9 items-center justify-center gap-x-2 rounded-md bg-gray-100 dark:bg-slate-800 px-3 text-sm font-medium text-[var(--text-primary)] hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors">Категория <span class="material-symbols-outlined text-base">expand_more</span></button>
+<button class="flex h-9 items-center justify-center gap-x-2 rounded-md bg-gray-100 dark:bg-slate-800 px-3 text-sm font-medium text-[var(--text-primary)] hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors">Источник <span class="material-symbols-outlined text-base">expand_more</span></button>
+<div class="relative flex-1 min-w-[200px]">
+<input class="w-full h-9 rounded-md border-[var(--border)] bg-[var(--card)] pl-10 pr-4 text-sm focus:ring-2 focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)]" placeholder="Поиск..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]">search</span>
+</div>
+</div>
+<div class="overflow-x-auto card">
+<table class="w-full text-left">
+<thead class="border-b border-[var(--border)]">
+<tr>
+<th class="px-6 py-3 text-xs font-semibold uppercase text-[var(--text-secondary)] tracking-wider">Дата</th>
+<th class="px-6 py-3 text-xs font-semibold uppercase text-[var(--text-secondary)] tracking-wider">Описание</th>
+<th class="px-6 py-3 text-xs font-semibold uppercase text-[var(--text-secondary)] tracking-wider">Категория</th>
+<th class="px-6 py-3 text-xs font-semibold uppercase text-[var(--text-secondary)] tracking-wider text-right">Сумма</th>
+</tr>
+</thead>
+<tbody id="latest-transactions-body" class="divide-y divide-[var(--border)]">
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+<script>
+// Текущая валюта
+let currentCurrency = 'PLN';
+
+// Currency symbols
+const currencySymbols = {
+  'PLN': 'zł',
+  'USD': '$',
+  'EUR': '€',
+  'KZT': '₸'
+};
+
+// Dark mode toggle
+const themeToggle = document.querySelector('header button');
+themeToggle.addEventListener('click', () => {
+  document.body.classList.toggle('dark');
+  const isDarkMode = document.body.classList.contains('dark');
+  themeToggle.querySelector('.material-symbols-outlined').textContent = isDarkMode ? 'dark_mode' : 'light_mode';
+});
+
+// Currency selector
+function createCurrencySelector() {
+  const header = document.querySelector('header .flex.flex-1');
+  const currencySelect = document.createElement('select');
+  currencySelect.className = 'h-10 px-3 rounded-md border-[var(--border)] bg-[var(--card)] text-[var(--text-primary)] mr-4';
+  currencySelect.innerHTML = `
+    <option value="PLN">PLN (zł)</option>
+    <option value="USD">USD ($)</option>
+    <option value="EUR">EUR (€)</option>
+    <option value="KZT">KZT (₸)</option>
+  `;
+  currencySelect.value = currentCurrency;
+  currencySelect.addEventListener('change', (e) => {
+    currentCurrency = e.target.value;
+    loadAllData();
+  });
+  header.insertBefore(currencySelect, header.lastElementChild);
+}
+
+// Format currency amount
+function formatCurrency(amount, currency = currentCurrency) {
+  const symbol = currencySymbols[currency] || currency;
+  return `${amount.toFixed(2)} ${symbol}`;
+}
+
+// ===== 1. Загрузка сводки текущего месяца =====
+async function loadSummary() {
+  try {
+    const res = await fetch(`/api/summary/current-month?currency=${currentCurrency}`);
+    const data = await res.json();
+    console.log('Summary data:', data);
+
+    document.getElementById('income-value').textContent = formatCurrency(data.total_income);
+    document.getElementById('expense-value').textContent = formatCurrency(data.total_expense);
+    document.getElementById('balance-value').textContent = formatCurrency(data.current_balance);
+    document.getElementById('net-value').textContent = formatCurrency(data.net_cash_flow);
+  } catch (err) {
+    console.error('Ошибка загрузки summary', err);
+  }
+}
+
+// ===== 2. Последние транзакции =====
+async function loadLatestTransactions() {
+  try {
+    const res = await fetch(`/api/transactions/latest?limit=10&currency=${currentCurrency}`);
+    const data = await res.json();
+    console.log('Последние транзакции:', data);
+
+    const tbody = document.getElementById('latest-transactions-body');
+    tbody.innerHTML = '';
+
+    data.forEach(tx => {
+      const row = document.createElement('tr');
+      const date = new Date(tx.date).toLocaleDateString('ru-RU');
+      const amount = parseFloat(tx.amount);
+      
+      row.innerHTML = `
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-[var(--text-secondary)]">${date}</td>
+        <td class="px-6 py-4 text-sm font-medium text-[var(--text-primary)]">${tx.description}</td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-[var(--text-secondary)]">${tx.type}</td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right ${amount < 0 ? 'text-red-500' : 'text-green-500'}">
+          ${amount < 0 ? '-' : '+'}${formatCurrency(Math.abs(amount))}
+        </td>
+      `;
+      tbody.appendChild(row);
+    });
+  } catch (err) {
+    console.error('Ошибка загрузки транзакций', err);
+  }
+}
+
+// ===== 3. График доходов/расходов по месяцам =====
+async function loadMonthlyStats() {
+  try {
+    const res = await fetch(`/api/stats/monthly?currency=${currentCurrency}`);
+    const data = await res.json();
+    console.log('Monthly stats:', data);
+
+    const chartContainer = document.getElementById('monthly-chart');
+    chartContainer.innerHTML = '';
+
+    if (data.length === 0) {
+      chartContainer.innerHTML = '<p class="text-[var(--text-secondary)] text-center">Нет данных</p>';
+      return;
+    }
+
+    const maxValue = Math.max(...data.map(d => Math.max(d.income, d.expense)));
+    
+    data.forEach(monthData => {
+      const monthDiv = document.createElement('div');
+      monthDiv.className = 'flex flex-col items-center gap-2 min-w-[60px]';
+      
+      const incomeHeight = maxValue > 0 ? (monthData.income / maxValue) * 180 : 0;
+      const expenseHeight = maxValue > 0 ? (monthData.expense / maxValue) * 180 : 0;
+      
+      monthDiv.innerHTML = `
+        <div class="flex flex-col items-center gap-1 h-[180px] justify-end">
+          <div class="bg-green-500 w-6 rounded-t-sm" style="height: ${incomeHeight}px" title="Доходы: ${formatCurrency(monthData.income)}"></div>
+          <div class="bg-red-500 w-6 rounded-b-sm" style="height: ${expenseHeight}px" title="Расходы: ${formatCurrency(monthData.expense)}"></div>
+        </div>
+        <span class="text-xs text-[var(--text-secondary)]">${new Date(monthData.month + '-01').toLocaleDateString('ru-RU', {month: 'short'})}</span>
+      `;
+      
+      chartContainer.appendChild(monthDiv);
+    });
+  } catch (err) {
+    console.error('Ошибка загрузки месячной статистики', err);
+  }
+}
+
+// ===== 4. Статистика по категориям =====
+async function loadCategoriesStats() {
+  try {
+    const res = await fetch(`/api/stats/categories?currency=${currentCurrency}`);
+    const data = await res.json();
+    console.log('Categories stats:', data);
+
+    const chartContainer = document.getElementById('categories-chart');
+    const legendContainer = document.getElementById('categories-legend');
+    
+    chartContainer.innerHTML = '';
+    legendContainer.innerHTML = '';
+
+    if (data.length === 0) {
+      chartContainer.innerHTML = '<p class="text-[var(--text-secondary)] text-center">Нет данных</p>';
+      return;
+    }
+
+    const total = data.reduce((sum, cat) => sum + cat.total_amount, 0);
+    const colors = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6'];
+    
+    // Простая круговая диаграмма (CSS)
+    let cumulativePercentage = 0;
+    
+    data.slice(0, 6).forEach((category, index) => {
+      const percentage = (category.total_amount / total) * 100;
+      const color = colors[index % colors.length];
+      
+      // Добавляем элемент в легенду
+      const legendItem = document.createElement('div');
+      legendItem.className = 'flex items-center gap-3';
+      legendItem.innerHTML = `
+        <div class="w-4 h-4 rounded-full" style="background-color: ${color}"></div>
+        <div class="flex-1">
+          <p class="text-sm font-medium text-[var(--text-primary)]">${category.category}</p>
+          <p class="text-xs text-[var(--text-secondary)]">${formatCurrency(category.total_amount)} (${percentage.toFixed(1)}%)</p>
+        </div>
+      `;
+      legendContainer.appendChild(legendItem);
+    });
+
+    // Простое отображение круговой диаграммы
+    chartContainer.innerHTML = `
+      <div class="w-full h-full rounded-full border-8 flex items-center justify-center text-sm font-medium text-[var(--text-primary)]" 
+           style="border-color: ${colors[0]} ${colors[1] || colors[0]} ${colors[2] || colors[0]} ${colors[3] || colors[0]}">
+        ${data.length}<br>категорий
+      </div>
+    `;
+    
+  } catch (err) {
+    console.error('Ошибка загрузки статистики категорий', err);
+  }
+}
+
+// ===== Загрузка всех данных =====
+async function loadAllData() {
+  await Promise.all([
+    loadSummary(),
+    loadLatestTransactions(),
+    loadMonthlyStats(),
+    loadCategoriesStats()
+  ]);
+}
+
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+  createCurrencySelector();
+  loadAllData();
+});
+</script>
+</body></html>
